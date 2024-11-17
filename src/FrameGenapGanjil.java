@@ -1,3 +1,6 @@
+
+import java.awt.event.KeyEvent;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -9,7 +12,46 @@
  */
 public class FrameGenapGanjil extends javax.swing.JFrame {
     
-    private void cekGenapGanjil() {
+    private void clearTextFieldOnFocus() {
+    inputAngka.addFocusListener(new java.awt.event.FocusListener() {
+        public void focusGained(java.awt.event.FocusEvent evt) {
+            // Menghapus isi text field saat fokus diperoleh
+            if (inputAngka.getText().equals("Masukkan Angka")) {
+                inputAngka.setText("");  // Hapus teks placeholder
+            }
+        }
+
+        public void focusLost(java.awt.event.FocusEvent evt) {
+            // Jika text field kosong, tampilkan placeholder
+            if (inputAngka.getText().isEmpty()) {
+                inputAngka.setText("Masukkan Angka");
+            }
+        }
+    });
+}
+    
+    private boolean isPrime(int number) {
+    if (number <= 1) {
+        return false; // Angka 1 atau kurang bukan bilangan prima
+    }
+    for (int i = 2; i <= Math.sqrt(number); i++) {
+        if (number % i == 0) {
+            return false; // Jika bisa dibagi dengan angka selain 1 dan dirinya, maka bukan prima
+        }
+    }
+    return true; // Jika tidak ada pembagi, maka bilangan prima
+}
+
+    
+    private void hanyaAngka(KeyEvent e) {
+    char c = e.getKeyChar();
+    // Memastikan hanya angka yang bisa dimasukkan
+    if (!Character.isDigit(c)) {
+        e.consume();  // Membatalkan input jika bukan angka
+    }
+}
+    
+private void cekGenapGanjil() {
     try {
         // Ambil angka dari inputAngka
         int angka = Integer.parseInt(inputAngka.getText());
@@ -20,6 +62,14 @@ public class FrameGenapGanjil extends javax.swing.JFrame {
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Angka " + angka + " adalah GANJIL");
         }
+        
+        // Cek apakah angka tersebut bilangan prima
+        if (isPrime(angka)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Angka " + angka + " adalah BILANGAN PRIMA");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Angka " + angka + " BUKAN BILANGAN PRIMA");
+        }
+        
     } catch (NumberFormatException e) {
         javax.swing.JOptionPane.showMessageDialog(this, "Silakan masukkan angka yang valid!");
     }
@@ -31,6 +81,8 @@ public class FrameGenapGanjil extends javax.swing.JFrame {
      */
     public FrameGenapGanjil() {
         initComponents();
+        inputAngka.setText("Masukkan Angka"); // Menambahkan placeholder awal
+            clearTextFieldOnFocus();  // Panggil fungsi untuk menghapus teks saat fokus
     }
 
     /**
@@ -70,6 +122,18 @@ public class FrameGenapGanjil extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel1.add(btnHitung, gridBagConstraints);
+
+        inputAngka.setPreferredSize(new java.awt.Dimension(120, 22));
+        inputAngka.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                inputAngkaFocusGained(evt);
+            }
+        });
+        inputAngka.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inputAngkaKeyTyped(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -85,6 +149,14 @@ public class FrameGenapGanjil extends javax.swing.JFrame {
     private void btnHitungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHitungActionPerformed
     cekGenapGanjil();        // TODO add your handling code here:
     }//GEN-LAST:event_btnHitungActionPerformed
+
+    private void inputAngkaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputAngkaKeyTyped
+      hanyaAngka(evt);  // Panggil fungsi hanyaAngka untuk memvalidasi input        // TODO add your handling code here:
+    }//GEN-LAST:event_inputAngkaKeyTyped
+
+    private void inputAngkaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputAngkaFocusGained
+inputAngka.setText("");        // TODO add your handling code here:
+    }//GEN-LAST:event_inputAngkaFocusGained
 
     /**
      * @param args the command line arguments
